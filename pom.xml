@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.igeeksky.xredis</groupId>
+    <artifactId>xredis-examples</artifactId>
+    <version>1.0.0</version>
+
+    <description>${project.name}</description>
+    <url>https://github.com/patricklaux/xredis-samples</url>
+    <packaging>pom</packaging>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/patricklaux/xredis-samples</url>
+        <connection>scm:git:https://github.com/patricklaux/xredis-samples</connection>
+        <developerConnection>scm:git:https://github.com/patricklaux/xredis-samples</developerConnection>
+    </scm>
+
+    <issueManagement>
+        <system>Github Issue</system>
+        <url>https://github.com/patricklaux/xredis-samples/issues</url>
+    </issueManagement>
+
+    <developers>
+        <developer>
+            <name>Patrick.Lau</name>
+            <email>patricklauxx@gmail.com</email>
+            <url>https://www.igeeksky.com</url>
+        </developer>
+    </developers>
+
+    <properties>
+        <xredis.version>1.0.0</xredis.version>
+        <junit.version>5.11.4</junit.version>
+        <spring.boot.version>3.4.2</spring.boot.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.version>3.13.0</maven.compiler.version>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <maven.gpg.version>3.2.4</maven.gpg.version>
+        <maven.source.version>3.3.1</maven.source.version>
+        <maven.javadoc.version>3.11.1</maven.javadoc.version>
+        <maven.flatten.version>1.6.0</maven.flatten.version>
+        <maven.central.publishing.version>0.5.0</maven.central.publishing.version>
+        <maven.jacoco.version>0.8.12</maven.jacoco.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.igeeksky.xredis</groupId>
+            <artifactId>xredis-spring-boot-autoconfigure</artifactId>
+			<version>${xredis.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
