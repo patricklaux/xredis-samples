@@ -9,7 +9,6 @@
 
     <description>${project.name}</description>
     <url>https://github.com/patricklaux/xredis-samples</url>
-    <packaging>pom</packaging>
 
     <licenses>
         <license>
