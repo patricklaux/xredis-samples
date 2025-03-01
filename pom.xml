@@ -38,9 +38,9 @@
     </developers>
 
     <properties>
-        <xredis.version>1.0.0</xredis.version>
+        <xredis.version>0.9.6</xredis.version>
         <junit.version>5.11.4</junit.version>
-        <spring.boot.version>3.4.2</spring.boot.version>
+        <spring.boot.version>3.4.3</spring.boot.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.version>3.13.0</maven.compiler.version>
@@ -58,7 +58,7 @@
     <dependencies>
         <dependency>
             <groupId>com.igeeksky.xredis</groupId>
-            <artifactId>xredis-spring-boot-autoconfigure</artifactId>
+            <artifactId>xredis-lettuce-spring-boot-autoconfigure</artifactId>
 			<version>${xredis.version}</version>
         </dependency>
         <dependency>

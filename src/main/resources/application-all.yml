@@ -57,7 +57,7 @@ xredis:
       # 这里为了演示 standalone，sentinel，cluster 分别如何配置，所以三种配置都存在，实际只需保留真正使用的其中一种
       # 当三种配置都存在时，那么优先使用 sentinel 配置，其次 cluster，最后 standalone
       master-id: mymaster # 哨兵主节点名称
-      nodes: 127.0.0.1:26379, 127.0.0.1:26380, 127.0.0.1:26381 # 哨兵节点列表
+      nodes: 127.0.0.1:26377, 127.0.0.1:26378, 127.0.0.1:26379 # 哨兵节点列表
       read-from: # 读节点选择策略（默认值：UPSTREAM，仅从主节点读取数据）
       sentinel-username:  # 哨兵用户名
       sentinel-password:  # 哨兵密码

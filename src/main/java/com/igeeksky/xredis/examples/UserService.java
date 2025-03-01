@@ -1,6 +1,6 @@
 package com.igeeksky.xredis.examples;
 
-import com.igeeksky.xredis.api.RedisOperator;
+import com.igeeksky.xredis.lettuce.api.RedisOperator;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
