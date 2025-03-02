@@ -10,7 +10,7 @@ xredis:
       # 这里为了演示 standalone，sentinel，cluster 分别如何配置，所以三种配置都存在，实际只需保留真正使用的其中一种
       # 当三种配置都存在时，那么优先使用 sentinel 配置，其次 cluster，最后 standalone
       node: 127.0.0.1:6379 # Redis 节点，支持 UnixSocket 方式
-      nodes: socket:/tmp/redis.sock, 127.0.0.1:6380 # Redis 节点列表
+      nodes: socket:/tmp/redis.sock, 127.0.0.1:6378 # Redis 节点列表
       read-from: # 读节点选择策略（默认值：UPSTREAM，仅从主节点读取数据）
       username: # Redis 用户名
       password: # Redis 密码
@@ -19,9 +19,9 @@ xredis:
       ssl: false # 是否启用 SSL（默认值：false）
       start-tls: false # 是否启用 TLS（默认值：false）
       ssl-verify-mode: FULL # SSL 验证模式，只有 ssl 配置为 true 时才有意义（默认值：FULL）
-      timeout: 60000 # 同步执行命令等待完成的最大时长（默认值：60000 单位：毫秒）
-      shutdown-quiet-period: 100 # 客户端优雅关闭静默期（默认值：100 单位：毫秒）
+      timeout: 60000 # 等待 RedisServer 响应的最大时长（默认值：60000 单位：毫秒）
       shutdown-timeout: 2000 # 客户端关闭超时（默认值：1000 单位：毫秒）
+      shutdown-quiet-period: 100 # 客户端优雅关闭静默期（默认值：100 单位：毫秒）
       client-options: # 客户端选项，一般保持默认即可
         auto-reconnect: true # 是否自动重连（默认值：true）
         disconnected-behavior: DEFAULT # 连接断开后是否接受命令（默认值：DEFAULT）
@@ -40,7 +40,7 @@ xredis:
             interval: 75000 # KeepAlive 发送间隔（默认值：75000， 单位：毫秒）
           tcp-user-timeout: # TCP_USER_TIMEOUT 配置选项，仅适用于 epoll 和 io_uring
             enabled: false # 是否启用 TCP_USER_TIMEOUT（默认值：false）
-            tcp-user-timeout: 60000 # TCP 超时配置（默认值：7875000 单位：毫秒）
+            tcp-user-timeout: 7875000 # TCP 超时配置（默认值：7875000 单位：毫秒）
         ssl-options: # SSL 配置选项，只有 ssl 配置为 true 时才有意义
           ssl-provider: JDK # （默认值：JDK）
           key-store-type: # 密钥库格式（默认值：jks）
@@ -68,9 +68,9 @@ xredis:
       ssl: false # 是否启用 SSL（默认值：false）
       start-tls: false # 是否启用 TLS（默认值：false）
       ssl-verify-mode: FULL # SSL 验证模式，只有 ssl 配置为 true 时才有意义（默认值：FULL）
-      timeout:  # 同步执行命令等待完成的最大时长（默认值：60000 单位：毫秒）
-      shutdown-quiet-period: 100 # 客户端优雅关闭静默期（默认值：100 单位：毫秒）
+      timeout:  # 等待 RedisServer 响应的最大时长（默认值：60000 单位：毫秒）
       shutdown-timeout: 2000 # 客户端关闭超时（默认值：1000 单位：毫秒）
+      shutdown-quiet-period: 100 # 客户端优雅关闭静默期（默认值：100 单位：毫秒）
       client-options: # 客户端选项，一般保持默认即可
         auto-reconnect: true # 是否自动重连（默认值：true）
         disconnected-behavior: DEFAULT # 连接断开后是否接受命令（默认值：DEFAULT）
@@ -89,7 +89,7 @@ xredis:
             interval: 75000 # KeepAlive 发送间隔（默认值：75000， 单位：毫秒）
           tcp-user-timeout: # TCP_USER_TIMEOUT 配置选项，仅适用于 epoll 和 io_uring
             enabled: false # 是否启用 TCP_USER_TIMEOUT（默认值：false）
-            tcp-user-timeout: 60000 # TCP 超时配置（默认值：7875000 单位：毫秒）
+            tcp-user-timeout: 7875000 # TCP 超时配置（默认值：7875000 单位：毫秒）
         ssl-options: # SSL 配置选项，只有 ssl 配置为 true 时才有意义
           ssl-provider: JDK # （默认值：JDK）
           key-store-type: # 密钥库格式（默认值：jks）
@@ -114,10 +114,10 @@ xredis:
       ssl: false # 是否启用 SSL（默认值：false）
       start-tls: false # 是否启用 TLS（默认值：false）
       ssl-verify-mode: FULL # SSL 验证模式，只有 ssl 配置为 true 时才有意义（默认值：FULL）
-      timeout:  # 同步执行命令等待完成的最大时长（默认值：60000 单位：毫秒）
-      shutdown-quiet-period: 100 # 客户端优雅关闭静默期（默认值：100 单位：毫秒）
+      timeout:  # 等待 RedisServer 响应的最大时长（默认值：60000 单位：毫秒）
       shutdown-timeout: 2000 # 客户端关闭超时（默认值：1000 单位：毫秒）
-      client-options: # 客户端选项，一般保持默认即可
+      shutdown-quiet-period: 100 # 客户端优雅关闭静默期（默认值：100 单位：毫秒）
+      client-options: # 集群客户端选项，一般保持默认即可
         auto-reconnect: true # 是否自动重连（默认值：true）
         disconnected-behavior: DEFAULT # 连接断开后是否接受命令（默认值：DEFAULT）
         ping-before-activate-connection: true # 连接激活前是否发送 PING 消息（默认值：true）
@@ -128,7 +128,7 @@ xredis:
         max-redirects: # 集群重定向最大重试次数（默认值：5）
         validate-cluster-node-membership: # 是否验证集群节点成员关系（默认值：true）
         node-filter:    # 建立连接的节点[白名单] （如未配置，连接所有节点；如有配置，只连接配置节点）
-        topology-refresh-options: # 拓扑刷新配置选项
+        topology-refresh-options: # 节点拓扑刷新配置选项
           adaptive-refresh-triggers: # 动态刷新触发器，列表类型（默认为空集）
           adaptive-refresh-timeout: # 动态刷新超时（默认值：30000 单位：毫秒）
           close-stale-connections: # 是否关闭旧连接（默认值：true）
@@ -146,7 +146,7 @@ xredis:
             interval: 75000 # KeepAlive 发送间隔（默认值：75000， 单位：毫秒）
           tcp-user-timeout: # TCP_USER_TIMEOUT 配置选项，仅适用于 epoll 和 io_uring
             enabled: false # 是否启用 TCP_USER_TIMEOUT（默认值：false）
-            tcp-user-timeout: 60000 # TCP 超时配置（默认值：7875000 单位：毫秒）
+            tcp-user-timeout: 7875000 # TCP 超时配置（默认值：7875000 单位：毫秒）
         ssl-options: # SSL 配置选项，只有 ssl 配置为 true 时才有意义
           ssl-provider: JDK # （默认值：JDK）
           key-store-type: # 密钥库格式（默认值：jks）
