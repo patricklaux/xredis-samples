@@ -2,16 +2,19 @@ package com.igeeksky.xredis.examples;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.CompletableFuture;
 
 /**
+ * 用户测试类
+ *
  * @author Patrick.Lau
  * @since 1.0.0
  */
@@ -25,21 +28,55 @@ class UserControllerTest {
             response -> HttpResponse.BodySubscribers.ofString(StandardCharsets.UTF_8);
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final JavaType RESPONSE_USER_TYPE = MAPPER.getTypeFactory().constructParametricType(Response.class, User.class);
+    private static final JavaType VOID_TYPE = MAPPER.getTypeFactory().constructParametricType(Response.class, User.class);
+    private static final JavaType USER_TYPE = MAPPER.getTypeFactory().constructParametricType(Response.class, User.class);
 
-    private static final JacksonCodec<Response<User>> RESPONSE_USER_CODEC = new JacksonCodec<>(MAPPER, RESPONSE_USER_TYPE);
+    private static final JacksonCodec<Response<User>> USER_CODEC = new JacksonCodec<>(MAPPER, USER_TYPE);
+    private static final JacksonCodec<Response<Void>> VOID_CODEC = new JacksonCodec<>(MAPPER, VOID_TYPE);
 
     @Test
     void createUser() {
-        String user = new User(1L, "Patrick.Lau", 18).toString();
-        Response<User> response = createUser(user);
-        System.out.printf("%s : %s\n", "createUser", response.getData());
+        long id = 1;
+        User user = new User(id, "Patrick.Lau", 18);
+
+        Response<Void> response1 = createUser(user.toString()).join();
+        System.out.printf("%s : %s\n", "addUser", response1);
+        Assertions.assertEquals(Response.OK, response1.getCode());
+
+        Response<User> response2 = getUser(id).join();
+        System.out.printf("%s : %s\n\n", "getUserById", response2);
+        Assertions.assertEquals(Response.OK, response2.getCode());
+        Assertions.assertEquals(user, response2.getData());
     }
 
     @Test
-    void getUserById() {
-        User user = getUser(1L).getData();
-        System.out.printf("%s : %s\n", "getUserById", user);
+    void deleteUser() {
+        long id = 1;
+        User user = new User(id, "Patrick.Lau", 18);
+
+        createUser(user.toString()).join();
+
+        Response<Void> delete = deleteUser(id).join();
+        System.out.printf("%s : %s\n", "deleteUser", delete);
+        Assertions.assertEquals(Response.OK, delete.getCode());
+
+        Response<User> get = getUser(id).join();
+        System.out.printf("%s : %s\n\n", "getUserById", get);
+        Assertions.assertEquals(Response.ERROR, get.getCode());
+        Assertions.assertNull(get.getData());
+    }
+
+    /**
+     * 发送创建用户请求
+     *
+     * @param user 用户信息(JSON String)
+     * @return {@code Response<Void>} – 包含创建结果信息的响应对象
+     */
+    private static CompletableFuture<Response<Void>> createUser(String user) {
+        // 创建请求
+        HttpRequest request = post("/user/create", user);
+        // 发送请求
+        return sendAndReceive(request).thenApply(VOID_CODEC::decode);
     }
 
     /**
@@ -48,48 +85,33 @@ class UserControllerTest {
      * @param id 用户ID
      * @return 包含用户信息的响应对象，类型为 {@code Response<User>}，其中 User 为获取到的用户信息
      */
-    private static Response<User> getUser(long id) {
-        String url = "/user/get/" + id;
-        String body = sendAndReceive(getRequest(url));
-        return RESPONSE_USER_CODEC.decode(body);
+    private static CompletableFuture<Response<User>> getUser(long id) {
+        HttpRequest request = get("/user/get/" + id);
+        return sendAndReceive(request).thenApply(USER_CODEC::decode);
+    }
+
+    private static CompletableFuture<Response<Void>> deleteUser(long id) {
+        HttpRequest request = delete("/user/delete/" + id);
+        return sendAndReceive(request).thenApply(VOID_CODEC::decode);
     }
 
     /**
-     * 发送创建用户请求
+     * 发送 HTTP 请求并接收响应
      *
-     * @param user 用户信息(JSON String)
-     * @return 包含用户信息的响应对象，类型为 {@code Response<User>}，其中 User 为创建的用户信息
+     * @param request HTTP 请求对象
+     * @return {@link String} – 响应体
      */
-    private static Response<User> createUser(String user) {
-        // 创建用户请求的URL路径
-        String url = "/user/create";
-        // 发送请求并接收响应，请求体即为用户信息字符串，经过序列化后发送
-        String body = sendAndReceive(postRequest(url, user));
-        // 解码响应体，返回包含用户信息的响应对象
-        return RESPONSE_USER_CODEC.decode(body);
+    private static CompletableFuture<String> sendAndReceive(HttpRequest request) {
+        return CLIENT.sendAsync(request, RESPONSE_HANDLER).thenApply(HttpResponse::body);
     }
 
     /**
-     * 发送HTTP请求并接收响应
+     * 创建 GET 请求
      *
-     * @param request HTTP请求对象
-     * @return 响应体，类型为 byte[]
+     * @param url 请求的 URL 路径
+     * @return HttpRequest 对象，用于发送 GET 请求
      */
-    private static String sendAndReceive(HttpRequest request) {
-        try {
-            return CLIENT.send(request, RESPONSE_HANDLER).body();
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * 创建GET请求
-     *
-     * @param url 请求URL路径
-     * @return HttpRequest对象，用于发送GET请求
-     */
-    private static HttpRequest getRequest(String url) {
+    private static HttpRequest get(String url) {
         return HttpRequest.newBuilder()
                 .uri(URI.create(HOST + url))
                 .GET()
@@ -97,17 +119,30 @@ class UserControllerTest {
     }
 
     /**
-     * 创建POST请求
+     * 创建 POST 请求
      *
-     * @param url  请求URL路径
-     * @param body 请求体，类型为 JSON格式的字符串
-     * @return HttpRequest对象，用于发送POST请求
+     * @param url  请求 URL 路径
+     * @param body 请求体，类型为 JSON 格式的字符串
+     * @return HttpRequest对象，用于发送 POST 请求
      */
-    private static HttpRequest postRequest(String url, String body) {
+    private static HttpRequest post(String url, String body) {
         return HttpRequest.newBuilder()
                 .uri(URI.create(HOST + url))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(body))
+                .build();
+    }
+
+    /**
+     * 创建 DELETE 请求
+     *
+     * @param url 请求 URL 路径
+     * @return HttpRequest 对象，用于发送 DELETE 请求
+     */
+    private static HttpRequest delete(String url) {
+        return HttpRequest.newBuilder()
+                .uri(URI.create(HOST + url))
+                .DELETE()
                 .build();
     }
 

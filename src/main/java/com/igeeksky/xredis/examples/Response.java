@@ -43,7 +43,7 @@ public class Response<T> {
         return new Response<>(ERROR, msg);
     }
 
-    public static <T> Response<T> of(int code, String msg, T data) {
+    public static <T> Response<T> from(int code, String msg, T data) {
         return new Response<>(code, msg, data);
     }
 
