@@ -9,8 +9,8 @@ xredis:
     standalone: # 单机模式 或 副本集模式
       # 这里为了演示 standalone，sentinel，cluster 分别如何配置，所以三种配置都存在，实际只需保留真正使用的其中一种
       # 当三种配置都存在时，那么优先使用 sentinel 配置，其次 cluster，最后 standalone
-      node: 127.0.0.1:6379 # Redis 节点，支持 UnixSocket 方式
-      nodes: socket:/tmp/redis.sock, 127.0.0.1:6378 # Redis 节点列表
+      node: 127.0.0.1:6379 # Redis 节点（支持 UnixSocket 方式）
+      nodes: 127.0.0.1:6378 # Redis 节点列表（如 nodes 无配置，主动发现并连接新节点；如 nodes 有配置，仅连接已配置的节点）
       read-from: # 读节点选择策略（默认值：UPSTREAM，仅从主节点读取数据）
       username: # Redis 用户名
       password: # Redis 密码
