@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.concurrent.ExecutionException;
 
 /**
+ * Pipeline 测试
+ *
  * @author Patrick.Lau
  * @since 1.0.0 2025/3/3
  */
