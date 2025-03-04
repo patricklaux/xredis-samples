@@ -73,8 +73,7 @@ public class PipelineTest {
             try {
                 Thread.sleep(5000);
                 redisOperator.sync().rpush("list-key", "list-value1");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (InterruptedException ignore) {
             }
         }).start();
 
