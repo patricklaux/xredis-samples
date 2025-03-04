@@ -34,7 +34,7 @@ public class UserService {
      * @return 添加结果
      */
     public CompletableFuture<Response<Void>> addUser(User user) {
-        return redisOperator.async().set(user.getId() + "", codec.encode(user))
+        return redisOperator.async().set(user.getId().toString(), codec.encode(user))
                 .toCompletableFuture()
                 .thenApply(result -> {
                     if (Objects.equals("OK", result)) {
@@ -51,7 +51,7 @@ public class UserService {
      * @return 用户信息
      */
     public CompletableFuture<Response<User>> getUser(Long id) {
-        return redisOperator.async().get(id + "")
+        return redisOperator.async().get(id.toString())
                 .toCompletableFuture()
                 .thenApply(s -> {
                     if (s == null) {
@@ -68,7 +68,7 @@ public class UserService {
      * @return 删除结果
      */
     public CompletableFuture<Response<Void>> deleteUser(Long id) {
-        return redisOperator.async().del(id + "")
+        return redisOperator.async().del(id.toString())
                 .toCompletableFuture()
                 .thenApply(result -> {
                     if (Objects.equals(1L, result)) {

@@ -1,10 +1,11 @@
 package com.igeeksky.xredis.examples;
 
 import com.igeeksky.xredis.lettuce.api.Pipeline;
+import com.igeeksky.xredis.lettuce.api.RedisOperator;
 import io.lettuce.core.RedisFuture;
+import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.concurrent.ExecutionException;
@@ -18,11 +19,14 @@ import java.util.concurrent.ExecutionException;
 @SpringBootTest
 public class PipelineTest {
 
-    @Autowired
+    @Resource
     private Pipeline<String, String> pipeline;
 
+    @Resource
+    private RedisOperator<String, String> redisOperator;
+
     @Test
-    public void test() throws ExecutionException, InterruptedException {
+    public void testBatch() throws ExecutionException, InterruptedException {
         // 1. 删除已有数据
         pipeline.del("key1", "key2", "key3");
         // 2. 设置数据
@@ -42,6 +46,41 @@ public class PipelineTest {
         Assertions.assertEquals("value1", result1.get());
         Assertions.assertEquals("value2", result2.get());
         Assertions.assertEquals("value3", result3.get());
+    }
+
+
+    @Test
+    public void testBlock() throws InterruptedException {
+        // 1. 同步删除和添加数据
+        redisOperator.sync().del("string-key", "list-key");
+        redisOperator.sync().set("string-key", "string-value");
+
+        // 2. Pipeline 阻塞读取 Redis-List 数据
+        pipeline.blpop(100000, "list-key")
+                .thenAccept(result -> System.out.printf("blpop:\t %d\n", System.currentTimeMillis()));
+
+        // 3. Pipeline 非阻塞读取 Redis-String 数据
+        pipeline.get("string-key")
+                .thenAccept(result -> System.out.printf("get:\t %d\n", System.currentTimeMillis()));
+
+        // 4. 批量提交命令
+        pipeline.flushCommands();
+
+        System.out.printf("start:\t %d\n", System.currentTimeMillis());
+
+        // 5. 休眠 5 秒后再向 Redis-List 添加数据
+        new Thread(() -> {
+            try {
+                Thread.sleep(5000);
+                redisOperator.sync().rpush("list-key", "list-value1");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
+        System.out.printf("end:\t %d\n", System.currentTimeMillis());
+
+        Thread.sleep(10000);
     }
 
 }
