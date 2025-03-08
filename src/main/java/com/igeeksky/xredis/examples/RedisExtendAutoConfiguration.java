@@ -75,11 +75,12 @@ public class RedisExtendAutoConfiguration {
      * <p>
      * 用于发布用户信息
      *
-     * @param streamOperator 预创建的 StreamOperator
+     * @param factory 预创建的 RedisOperatorFactory
      * @return StreamPublisher
      */
     @Bean
-    StreamPublisher<String, String, User> streamPublisher(StreamOperator<String, String> streamOperator) {
+    StreamPublisher<String, String, User> streamPublisher(RedisOperatorFactory factory) {
+        StreamOperator<String, String> streamOperator = factory.streamOperator(StringCodec.UTF8);
         XAddOptions options = XAddOptions.builder().maxLen(10000).approximateTrimming().build();
         return new StreamPublisher<>("stream:user", options, streamOperator, new UserStreamCodec());
     }
