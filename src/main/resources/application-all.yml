@@ -120,17 +120,17 @@ xredis:
         publish-on-scheduler: false # 是否使用专用的 scheduler 处理 publish 事件（默认值：false）
         request-queue-size: # 请求队列大小 （默认值：Integer.MAX_VALUE）
         suspend-reconnect-on-protocol-failure: # 是否在协议失败时暂停重连（默认值：false）
-        max-redirects: # 集群重定向最大重试次数（默认值：5）
-        validate-cluster-node-membership: # 是否验证集群节点成员关系（默认值：true）
-        node-filter:    # 建立连接的节点[白名单] （如未配置，连接所有节点；如有配置，只连接配置节点）
-        topology-refresh-options: # 节点拓扑刷新配置选项
-          adaptive-refresh-triggers: # 动态刷新触发器，列表类型（默认为空集）
-          adaptive-refresh-timeout: # 动态刷新超时（默认值：30000 单位：毫秒）
-          close-stale-connections: # 是否关闭旧连接（默认值：true）
-          dynamic-refresh-sources: # 是否动态刷新节点源（默认值：true）
-          periodic-refresh-enabled: # 是否启用周期刷新（默认值：true）
-          refresh-period: # 刷新周期 （默认值：30000 单位：毫秒）
-          refresh-triggers-reconnect-attempts: # 刷新触发器重连尝试次数（默认值：3）
+        max-redirects: # 【集群】重定向最大重试次数（默认值：5）
+        validate-cluster-node-membership: # 【集群】是否验证集群节点成员关系（默认值：true）
+        node-filter:    # 【集群】建立连接的节点[白名单] （如未配置，连接所有节点；如有配置，只连接配置节点）
+        topology-refresh-options: # 【集群】节点拓扑刷新配置选项
+          adaptive-refresh-triggers: # 【集群】动态刷新触发器，列表类型（默认为空集）
+          adaptive-refresh-timeout: # 【集群】动态刷新超时（默认值：30000 单位：毫秒）
+          close-stale-connections: # 【集群】是否关闭旧连接（默认值：true）
+          dynamic-refresh-sources: # 【集群】是否动态刷新节点源（默认值：true）
+          periodic-refresh-enabled: # 【集群】是否启用周期刷新（默认值：true）
+          refresh-period: # 【集群】刷新周期 （默认值：30000 单位：毫秒）
+          refresh-triggers-reconnect-attempts: # 【集群】刷新触发器重连尝试次数（默认值：3）
         socket-options: # socket 配置选项
           connect-timeout: 10000 # Socket 连接超时（默认值：10000， 单位：毫秒）
           tcp-no-delay: true  # 是否启用 TCP_NODELAY（默认值：true）

@@ -38,7 +38,7 @@
     </developers>
 
     <properties>
-        <xredis.version>1.0.3</xredis.version>
+        <xredis.version>1.0.4</xredis.version>
         <junit.version>5.11.4</junit.version>
         <spring.boot.version>3.4.3</spring.boot.version>
         <maven.compiler.source>21</maven.compiler.source>
