@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.igeeksky.xredis</groupId>
     <artifactId>xredis-examples</artifactId>
-    <version>1.0.0</version>
+    <version>${xredis.version}</version>
 
     <description>${project.name}</description>
     <url>https://github.com/patricklaux/xredis-samples</url>
